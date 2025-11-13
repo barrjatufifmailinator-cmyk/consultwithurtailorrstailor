@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,13 +9,12 @@ export default function PaymentPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Use state to avoid SSR issues
   const [title, setTitle] = useState("Consultation");
   const [price, setPrice] = useState(0);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    // Populate values on client-side
+    // Only runs on client side
     const t = searchParams.get("title") || "Consultation";
     const p = Number(searchParams.get("price")) || 0;
     const e = searchParams.get("email") || "";
@@ -42,7 +42,7 @@ export default function PaymentPage() {
       </p>
 
       <PaystackButton
-        email={email || "customer@example.com"} // fallback email
+        email={email || "customer@example.com"}
         amount={price}
         onSuccess={handlePaymentSuccess}
       />
