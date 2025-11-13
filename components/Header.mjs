@@ -6,9 +6,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const { scrollY } = useScroll();
 
-  // Only render on client to prevent double render ghost text
   useEffect(() => {
     setIsMounted(true);
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -16,8 +14,11 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Don’t render anything until mounted — prevents hydration flicker/double text
   if (!isMounted) return null;
 
+  // Move these inside the “mounted” phase
+  const { scrollY } = useScroll();
   const blurAmount = useTransform(scrollY, [0, 300], ["blur(0px)", "blur(12px)"]);
   const opacity = useTransform(scrollY, [0, 300], [0.4, 0.9]);
 
